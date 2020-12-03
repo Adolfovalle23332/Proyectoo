@@ -12,19 +12,18 @@ const router = express.Router();
 module.exports = () => {
 // Rutas disponibles
 router.get("/", (req, res, next) => {
-  console.log(req.isAuthenticated());
   if(req.user != undefined || req.isAuthenticated()){
     if(req.user.roles.includes('cliente')){
-      res.redirect("/home");
+      res.redirect("/inicio");
     }
     if(req.user.roles.includes('restaurante')){
-      res.redirect("/home");
+      res.redirect("/restaurantes");
     }
     if(req.user.roles.includes('delivery')){
-      res.redirect("/home");
+      res.redirect("/delivery");
     }
   }else{
-    res.render("home", {
+    res.render("inicio", {
       title: "El Internacional",
       layout: "landingpage",
       login:false
@@ -33,7 +32,7 @@ router.get("/", (req, res, next) => {
   
 });
 
-router.get("/home", (req,res,next)=>{
+router.get("/inicio", (req,res,next)=>{
   let tipo = "";
   if(req.user != null){
     tipo = req.user.roles;
@@ -41,11 +40,51 @@ router.get("/home", (req,res,next)=>{
   let pagActual = 'Inicio';
   let login = false;
   if(req.user != undefined){login=true}
-  res.render("cliente/home", {
+  res.render("cliente/inicio", {
     title: "El Internacional",
     layout: "frontend",
     login,
     tipo,
+    pagActual,
+    year: new Date().getFullYear(),
+  });
+});
+
+router.get("/restaurantes", (req,res,next)=>{
+  let tipo = "";
+  let rutaBase = "restaurantes/"
+  if(req.user != null){
+    tipo = req.user.roles;
+  }
+  let pagActual = 'Inicio';
+  let login = false;
+  if(req.user != undefined){login=true}
+  res.render("administracion/restaurantes/inicio", {
+    title: "El Internacional - Administracion Restaurantes",
+    layout: "admin",
+    login,
+    tipo,
+    rutaBase,
+    pagActual,
+    year: new Date().getFullYear(),
+  });
+});
+
+router.get("/delivery", (req,res,next)=>{
+  let tipo = "";
+  let rutaBase = "delivery/"
+  if(req.user != null){
+    tipo = req.user.roles;
+  }
+  let pagActual = 'Inicio';
+  let login = false;
+  if(req.user != undefined){login=true}
+  res.render("administracion/delivery/inicio", {
+    title: "El Internacional - Administracion DElivery",
+    layout: "admin",
+    login,
+    tipo,
+    rutaBase,
     pagActual
   });
 });
