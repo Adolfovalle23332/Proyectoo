@@ -7,7 +7,6 @@ const { validationResult } = require("express-validator");
 const multer = require("multer");
 const shortid = require("shortid");
 
-
 const year = new Date().getFullYear();
 
 // Mostrar el formulario de creación de items
@@ -108,8 +107,7 @@ exports.crearRestaurante = async (req, res, next) => {
   // Verificar que no existen errores de validación
   const errores = validationResult(req);
   const messages = [];
-console.log(errores);
-
+  console.log(errores);
   // Si hay errores
   if (!errores.isEmpty()) {
     errores.array().map((error) => {
@@ -136,9 +134,9 @@ console.log(errores);
         delivery_radio,
         costo_repartir,
         precio_minimo_orden,
-       } = req.body;
+      } = req.body;
 
-      await Producto.create({
+      await Restaurante.create({
         nombre,
         descripcion,
         rating,
@@ -191,7 +189,6 @@ exports.subirImagen = (req, res, next) => {
   // } else {
   // Subir el archivo mediante Multer
   upload(req, res, function (error) {
-    
     if (error) {
       // Errores de Multer
       if (error instanceof multer.MulterError) {
@@ -230,7 +227,7 @@ exports.subirImagen = (req, res, next) => {
 const configuracionMulter = {
     // Tamaño máximo del archivo en bytes
     limits: {
-      fileSize: 300000,
+      fileSize: 3000000,
     },
     // Dónde se almacena el archivo
     storage: (fileStorage = multer.diskStorage({
