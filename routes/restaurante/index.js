@@ -134,7 +134,7 @@ module.exports = () => {
         });
 
         // Rutas disponibles
-        router.get("/lista-restaurantes", (req, res, next) => {
+        router.get("/lista-restaurantes", async (req, res, next) => {
           let tipo = "";
           if (req.user != null) {
             tipo = req.user.roles;
