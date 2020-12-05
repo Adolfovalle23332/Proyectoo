@@ -6,7 +6,7 @@ const Restaurante = mongoose.model("Restaurantes");
 const { validationResult } = require("express-validator");
 const multer = require("multer");
 const shortid = require("shortid");
-const { discriminators } = require("../models/Restaurantes");
+
 
 const year = new Date().getFullYear();
 
@@ -108,6 +108,7 @@ exports.crearRestaurante = async (req, res, next) => {
   // Verificar que no existen errores de validación
   const errores = validationResult(req);
   const messages = [];
+console.log(errores);
 
   // Si hay errores
   if (!errores.isEmpty()) {
@@ -118,13 +119,14 @@ exports.crearRestaurante = async (req, res, next) => {
     // Enviar los errores a través de flash messages
     req.flash("messages", messages);
 
-    res.redirect("/items/nuevo");
+    res.redirect("escritorio");
   } else {
     // Almacenar los valores del restaurante
     try {
       const { 
         nombre,
         descripcion,
+        rating,
         aprox_delivery_time, 
         direccion,
         latitud,
@@ -138,9 +140,10 @@ exports.crearRestaurante = async (req, res, next) => {
       await Producto.create({
         nombre,
         descripcion,
-        descripcion,
+        rating,
         aprox_delivery_time, 
-        direccion,latitud,
+        direccion,
+        latitud,
         longitud,
         cargo_empaque,
         delivery_type,
@@ -157,7 +160,7 @@ exports.crearRestaurante = async (req, res, next) => {
       });
       req.flash("messages", messages);
 
-      res.redirect("/lista-restaurantes");
+      res.redirect("lista-restaurantes");
     } catch (error) {
       console.log(error);
       messages.push({
@@ -165,7 +168,7 @@ exports.crearRestaurante = async (req, res, next) => {
         alertType: "danger",
       });
       req.flash("messages", messages);
-      res.redirect("/lista-restaurantes");
+      res.redirect("lista-restaurantes");
     }
   }
 };
@@ -187,7 +190,7 @@ exports.subirImagen = (req, res, next) => {
   // } else {
   // Subir el archivo mediante Multer
   upload(req, res, function (error) {
-    console.log(req.body);
+    
     if (error) {
       // Errores de Multer
       if (error instanceof multer.MulterError) {
@@ -258,4 +261,4 @@ const configuracionMulter = {
     },
   };
 // Función que sube el archivo
-const upload = multer(configuracionMulter).single("imagen");
+const upload = multer(configuracionMulter).single("imagen_url");

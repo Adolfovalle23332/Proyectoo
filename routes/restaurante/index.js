@@ -1,14 +1,20 @@
 // Importar los módulos requeridos
 const express = require("express");
-const { check } = require("express-validator");
-const restauranteController = require("../../controllers/RestauranteController");
+const restauranteController = require("../.. controllers/RestauranteController");
+const mongoose = require("mongoose");
+const Restaurante = mongoose.model("Restaurantes");
+
+const { json } = require("express");
+const passport = require("passport");
+
 // Configura y mantiene todos los endpoints en el servidor
 const router = express.Router();
+const authController = require("../../controllers/authController");
 
 module.exports = () => {
 
   router.use(async function (req, res, next) {
-
+    const { check } = require("express-validator");
     if (req.user != null) {
       if (req.user.roles.includes("restaurante") && true) {
 
@@ -136,12 +142,18 @@ module.exports = () => {
           let pagActual = 'Inicio';
           let login = false;
           if (req.user != undefined) { login = true }
+
+          //obtener todos los restaurantes disponibles
+          const restaurantes = await Restaurante.find().lean();
+          let rutaImg = `/public/uploads/items`;
           res.render("administracion/restaurantes/adminRestaurantes/restaurantes", {
             title: "El Internacional - Administracion Items",
             layout: "admin",
             login,
             tipo,
             pagActual,
+            restaurantes,
+            rutaImg,
             rutaBase: "restaurantes/",
             year: new Date().getFullYear(),
           });
@@ -167,7 +179,9 @@ module.exports = () => {
           });
         });
         // Rutas disponibles
-        router.post("/nuevo", [
+        router.post("/nuevo", 
+        restauranteController.subirImagen,
+        [
           check("nombre", "Debes ingresar el nombre del producto")
             .not()
             .isEmpty()
@@ -177,7 +191,8 @@ module.exports = () => {
             .isEmpty()
             .escape()
         ],
-          restauranteController.crearRestaurante);
+          restauranteController.crearRestaurante
+          );
 
       } else {
         res.redirect("/");
