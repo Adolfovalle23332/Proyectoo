@@ -135,7 +135,8 @@ console.log(errores);
         delivery_type,
         delivery_radio,
         costo_repartir,
-        precio_minimo_orden } = req.body;
+        precio_minimo_orden,
+       } = req.body;
 
       await Producto.create({
         nombre,
@@ -214,7 +215,7 @@ exports.subirImagen = (req, res, next) => {
         ]);
       }
       // Redireccionar y mostrar el error
-      res.redirect("/crear-producto");
+      res.redirect("lista-restaurantes");
       return;
     } else {
       // Archivo cargado correctamente
