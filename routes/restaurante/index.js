@@ -1,6 +1,6 @@
 // Importar los módulos requeridos
 const express = require("express");
-const restauranteController = require("../.. controllers/RestauranteController");
+const restauranteController = require("../../controllers/RestauranteController");
 const mongoose = require("mongoose");
 const Restaurante = mongoose.model("Restaurantes");
 
