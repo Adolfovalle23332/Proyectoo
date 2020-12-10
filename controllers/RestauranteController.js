@@ -32,6 +32,7 @@ exports.vistaItems = async (req, res, next) =>{
         login,
         tipo,
         restaurante,
+        id:restaurante._id,
         pagActual,
         rutaBase:"restaurantes/",
         year: new Date().getFullYear(),
@@ -59,7 +60,9 @@ exports.vistaCrearItems = (req, res, next) =>{
 
 // Crear un item
 exports.crearItem = async (req, res, next) => {
-    // Verificar que no existen errores de validación
+  let restaurante = await Restaurante.findOne({_id:req.params.restaurante}).lean();
+  console.log(restaurante);
+  // Verificar que no existen errores de validación
     const errores = validationResult(req);
     const messages = [];
   
@@ -72,19 +75,18 @@ exports.crearItem = async (req, res, next) => {
       // Enviar los errores a través de flash messages
       req.flash("messages", messages);
   
-      res.redirect("/items/nuevo");
+      res.redirect("restaurantes/"+restaurante.url+"/items");
+      
     } else {
       // Almacenar los valores del item
       try {
-        const { nombre, descripcion, precio, estado } = req.body;
-  
-        await Producto.create({
-          nombre,
-          descripcion,
-          precio,
-          imgurl: req.file.filename,
-          restaurante_id: req.user._id,
-        });
+        const { nombre, descripcion, precio, restaurante_id } = req.body;
+      const imgurl = req.file.filename;
+      const agregar = {
+        $push: {items:{nombre,descripcion,precio,restaurante_id,imgurl}}
+      }
+      await Restaurante.updateOne({_id:req.params.restaurante},agregar);
+        
   
         messages.push({
           message: "Item agregado correctamente!",
@@ -92,7 +94,7 @@ exports.crearItem = async (req, res, next) => {
         });
         req.flash("messages", messages);
   
-        res.redirect("/items");
+        res.redirect("restaurantes/"+restaurante.url+"/items");
       } catch (error) {
         console.log(error);
         messages.push({
@@ -100,7 +102,7 @@ exports.crearItem = async (req, res, next) => {
           alertType: "danger",
         });
         req.flash("messages", messages);
-        res.redirect("/items");
+        res.redirect("restaurantes/"+restaurante.url+"/items");
       }
     }
   };
