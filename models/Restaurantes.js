@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const shortid = require("shortid");
 const slug = require("slug");
+
 const restauranteSchema = new mongoose.Schema({
     nombre: String,
     descripcion: String,
@@ -17,6 +18,8 @@ const restauranteSchema = new mongoose.Schema({
     costo_repartir: Number,
     precio_minimo_orden: Number,
     imagen_url: String,
+    fechaRegistro: Date,
+    fechaActualizado: Date,
     url: {
         type: String,
         lowercase: true,
@@ -72,23 +75,35 @@ const restauranteSchema = new mongoose.Schema({
 // Hooks para generar la URL del restaurante
 restauranteSchema.pre("save", function (next) {
     // Crear la URL
-  console.log(this._update.$push);
+
+    const url = slug(this.nombre);
+    this.url = `${url}-${shortid.generate()}`;
+    const fecha = Date.now();
+    this.fechaRegistro = fecha;
+    next();
+  });
+  
+// Hooks para generar la URL del restaurante
+restauranteSchema.pre("updateOne", function (next) {
+  // Crear la URL
   if(this._update.nombre != undefined){
-    console.log("AJA");
     console.log(this._update);
     const url = slug(this._update.nombre);
     this._update.url = `${url}-${shortid.generate()}`;
+    const fecha = Date.now();
+    this._update.fechaActualizado = fecha;
   }
   if(this._update.$push != undefined){
-    console.log("AJA Item");
     console.log(this._update.$push.items.nombre);
     const url = slug(this._update.$push.items.nombre);
     this._update.$push.items.url = `${url}-${shortid.generate()}`;
     this._update.$push.items.estado = 1;
   }
-  next();
   
-  });
+  
+  next();
+});
+
 
   // Generar un índice para mejorar la búsqueda por el nombre del producto
   restauranteSchema.index({ nombre: "text" });
