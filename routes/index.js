@@ -6,12 +6,10 @@ const homeController = require("../controllers/HomeController");
 const { check } = require("express-validator");
 const { json } = require("express");
 const passport = require("passport");
-
 const restaurante = require("./restaurante");
 const Restaurantes = require("../models/Restaurantes");
 const mongoose = require("mongoose");
 const Restaurante = mongoose.model("Restaurantes");
-
 // Configura y mantiene todos los endpoints en el servidor
 const router = express.Router();
 
@@ -25,7 +23,8 @@ router.get("/", async (req, res, next) =>  {
     if(req.user.roles.includes('restaurante')){
       res.redirect("/restaurantes");
     }
-    res.redirect("/delivery");
+    if(req.user.roles.includes('delivery')){
+      res.redirect("/delivery");
     }
   }else{
     let restaurantes = await Restaurantes.find().lean();
@@ -48,7 +47,7 @@ router.get("/inicio", async (req,res,next)=>{
   let login = false;
   if(req.user != undefined){login=true}
   let restaurantes = await Restaurantes.find().lean();
-  
+
   res.render("cliente/inicio", {
     title: "El Internacional",
     layout: "frontend",
@@ -137,4 +136,3 @@ router.get("/:restaurante",homeController.itemsRestaurante);
 
 return router;
 };
-
