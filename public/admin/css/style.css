@@ -61,9 +61,14 @@
   }
 
   .imagen-restaurante{
-
+    
     float: left;
     width: 50%;
     margin-bottom: 1rem;
 
-  
+  }
+
+  .logoheader{
+    font-family: 'Engagement', cursive;
+    font-size: 2.5rem;
+  }
