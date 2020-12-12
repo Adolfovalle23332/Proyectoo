@@ -48,6 +48,7 @@ router.get("/inicio", async (req,res,next)=>{
   let login = false;
   if(req.user != undefined){login=true}
   let restaurantes = await Restaurantes.find().lean();
+  
   res.render("cliente/inicio", {
     title: "El Internacional",
     layout: "frontend",
