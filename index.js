@@ -48,6 +48,8 @@ hbs.handlebars.registerHelper("EachRol", function(valor,parametro,options) {
   }
   return options.inverse(this);
 });
+
+
 // Crear la sesión de usuario y la cookie encargada de almacenarla
 app.use(cookieParser());
 
@@ -74,10 +76,9 @@ app.use((req, res, next) => {
   res.locals.messages = req.flash();
   next();
 });
-
 app.use(express.json());
-
 // Habilitar body-parser para obtener el cuerpo de la petición
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Implementar las rutas a utilizar
@@ -86,5 +87,3 @@ app.use("/clientes", clienteRoutes());
 app.use("/restaurantes", restauranteRoutes());
 app.use("/delivery",delliveryRoutes());
 app.listen(process.env.PORT);
-
-
