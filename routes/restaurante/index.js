@@ -81,6 +81,8 @@ module.exports = () => {
         // Ver todos los items
         router.get("/:id/items", restauranteController.vistaItems);
 
+        //modificar item
+        router.post("/:id/item/:url", restauranteController.EditarItems);
         // Rutas disponibles
         router.post("/:restaurante/items/nuevo", restauranteController.subirImagen, 
         [
@@ -159,7 +161,7 @@ module.exports = () => {
           if (req.user != undefined) { login = true }
 
           // Obtener todos los restaurantes disponibles
-          const restaurantes = await Restaurante.find().lean();
+          const restaurantes = await Restaurante.find({userId:req.user._id}).lean();
           let rutaImg = `/public/uploads/items`;
           res.render("administracion/restaurantes/adminRestaurantes/restaurantes", {
             title: "El Internacional - Administracion de restaurantes",
