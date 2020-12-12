@@ -81,8 +81,12 @@ module.exports = () => {
         // Ver todos los items
         router.get("/:id/items", restauranteController.vistaItems);
 
+        // vista modificar item
+        router.get("/:id/items/:url", restauranteController.vistaEditarItems);
+
         //modificar item
         router.post("/:id/item/:url", restauranteController.EditarItems);
+
         // Rutas disponibles
         router.post("/:restaurante/items/nuevo", restauranteController.subirImagen, 
         [
@@ -101,8 +105,8 @@ module.exports = () => {
           check("precio", "Valor incorrecto en el precio del producto").isNumeric(),
         ],
           restauranteController.crearItem);
-
         
+        // crear item
         router.post("/:id/items/:url", restauranteController.subirImagen, 
         [
           check("nombre", "Debes ingresar el nombre del producto")
@@ -123,12 +127,11 @@ module.exports = () => {
 
         // Rutas disponibles
         router.post("/:url/eliminar", async (req,res,next) =>{
-          //await Restaurante.deleteOne({_id:req.params.url})
-          console.log(req.params);
-          res.redirect("/restaurantes/"+req.params.url+"/items");
+            //await Restaurante.deleteOne({_id:req.params.url})
+            console.log(req.params);
+            res.redirect("/restaurantes/"+req.params.url+"/items");
         });
 
-        
 
         // Rutas disponibles
         router.get("/escritorio", (req, res, next) => {
@@ -220,7 +223,8 @@ module.exports = () => {
             .escape()
         ],
         restauranteController.editarRestaurante);
-// Formulario nuevo restaurante
+
+        // Formulario nuevo restaurante
         router.get("/nuevo", (req, res, next) => {
           let tipo = "";
           if (req.user != null) {
@@ -239,8 +243,8 @@ module.exports = () => {
             year: new Date().getFullYear(),
           });
         });
-       
-         // Agregando nuevo restaurante
+
+        // Agregando nuevo restaurante
         router.post("/nuevo",
         restauranteController.subirImagen,
         [
