@@ -147,14 +147,15 @@ exports.crearItem = async (req, res, next) => {
         let imgurl = "";
         if(req.file != undefined){
          imgurl = req.file.filename;
-        }
+        }else{
+          let item = await Restaurante.findOne();
 
-        let item = await Restaurante.findOne();
         if(item.imgurl){
           imgurl = item.imgurl;
         }else{
           imgurl = "no-image-default.png";
         }
+      }
         const agregar = {
           $push: {items:{nombre,descripcion,precio,restaurante_id,imgurl}}
         }
