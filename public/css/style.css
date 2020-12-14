@@ -102,3 +102,12 @@ header,
   position: relative;
   top: 13em;
 }
+
+.principal-items{
+  position: relative;
+  top: 5em;
+}
+
+.titulo-landingpage{
+  color: #000!important;
+}

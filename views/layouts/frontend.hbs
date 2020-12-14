@@ -64,7 +64,7 @@
         <ul class="navbar-nav nav-flex-icons">
           <li class="nav-item">
             <a class="nav-link waves-effect">
-              <span class="badge red z-depth-1 mr-1"> 0 </span>
+              <span class="badge red z-depth-1 mr-1"> {{ cantidad }} </span>
               <i class="fas fa-shopping-cart"></i>
               <span class="clearfix d-none d-sm-inline-block"> Carrito </span>
             </a>
@@ -82,7 +82,7 @@
           {{# if login }}
           <li class="nav-item">
             <a href="/cerrar-sesion" class="nav-link border border-light rounded">
-              <i class="fa fa-window-close mr-2"></i>Cerrar sesión
+              <i class="fas fa-sign-out mr-2"></i>Cerrar sesión
             </a>
           </li>
           {{ else }}
