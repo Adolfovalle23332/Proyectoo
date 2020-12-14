@@ -211,10 +211,11 @@ exports.almacenarNuevaPassword = async (req, res, next) => {
   }
 };
 
-//verifica si el usuario se encuentra autenticado
-exports.verificarInicioSesion = (rep, res, next)=> {
-  //si el usuario se encuentra autenticado que siga con el sig middleware
+// Verifica que el usuario se encuentre autenticado
+exports.verificarInicioSesion = (req, res, next) => {
+  // Si el usuario se encuentra autenticado que siga con el siguiente middleware
   if (req.isAuthenticated()) return next();
-  //si no se autentico, redireccionar al iniciio de sesion
+
+  // Si no se auntenticó, redireccionar al inicio de sesión
   res.redirect("/");
 };
