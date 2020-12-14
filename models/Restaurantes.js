@@ -72,10 +72,10 @@ const restauranteSchema = new mongoose.Schema({
                 }],
     }],
 });
+
 // Hooks para generar la URL del restaurante
 restauranteSchema.pre("save", function (next) {
     // Crear la URL
-
     const url = slug(this.nombre);
     this.url = `${url}-${shortid.generate()}`;
     const fecha = Date.now();
@@ -83,27 +83,31 @@ restauranteSchema.pre("save", function (next) {
     next();
   });
   
-// Hooks para generar la URL del restaurante
+  // Hooks para generar la URL del restaurante
 restauranteSchema.pre("updateOne", function (next) {
-  // Crear la URL
-  if(this._update.nombre != undefined){
-    console.log(this._update);
-    const url = slug(this._update.nombre);
-    this._update.url = `${url}-${shortid.generate()}`;
-    const fecha = Date.now();
-    this._update.fechaActualizado = fecha;
-  }
-  if(this._update.$push != undefined){
-    console.log(this._update.$push.items.nombre);
-    const url = slug(this._update.$push.items.nombre);
-    this._update.$push.items.url = `${url}-${shortid.generate()}`;
-    this._update.$push.items.estado = 1;
-  }
-  
-  
-  next();
-});
-
+    // Crear la URL
+    if(this._update.nombre != undefined){
+      const url = slug(this._update.nombre);
+      this._update.url = `${url}-${shortid.generate()}`;
+      const fecha = Date.now();
+      this._update.fechaActualizado = fecha;
+    }
+    if(this._update.$push != undefined){
+      const url = slug(this._update.$push.items.nombre);
+      this._update.$push.items.url = `${url}-${shortid.generate()}`;
+      this._update.$push.items.estado = 1;
+    }
+    
+    if(this._update.$set != undefined){
+      let data = this._update.$set;
+      const url = slug(data["items.$"].nombre);
+      data["items.$"].url = `${url}-${shortid.generate()}`;
+      data["items.$"].estado = 1;
+    }
+    
+    
+    next();
+  });
 
   // Generar un índice para mejorar la búsqueda por el nombre del producto
   restauranteSchema.index({ nombre: "text" });

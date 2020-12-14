@@ -66,12 +66,10 @@ exports.vistaEditarItems = async (req, res, next) =>{
     });
 };
 
-// Crear un item
+// editar un item
 exports.EditarItems = async (req, res, next) => {
-  console.log(restaurante);
-  return;
+  console.log("Editar Item");
   let restaurante = await Restaurante.findOne({url:req.params.id}).lean();
-  
   // Verificar que no existen errores de validación
   const errores = validationResult(req);
   const messages = [];
@@ -90,23 +88,31 @@ exports.EditarItems = async (req, res, next) => {
     try {
       const { nombre, descripcion, precio, restaurante_id } = req.body;
       let imgurl = "";
+      let item = await Restaurante.findOne({url:req.params.id},{items : {$elemMatch:{url:req.params.url}}},{url:req.params.url}).lean();
+      let itemObtenido;
+      if(item != undefined){
+      itemObtenido =item.items[0]
+      };
       if(req.file != undefined){
        imgurl = req.file.filename;
+      }else{
+        console.log(itemObtenido.imgurl);
+        if(itemObtenido.imgurl){
+          imgurl = itemObtenido.imgurl;
+        }else{
+          imgurl = "no-image-default.png";
+        }
       }
 
-      let item = await Restaurante.findOne();
-      if(item.imgurl){
-        imgurl = item.imgurl;
-      }else{
-        imgurl = "no-image-default.png";
-      }
+      
+      
       const editar = {
-        $set: {items:{nombre,descripcion,precio,restaurante_id,imgurl}}
+        $set: {"items.$":{nombre,descripcion,precio,restaurante_id,imgurl}}
       }
-      await Restaurante.updateOne({url:req.params.id,"items.url":req.params.url},editar);
+      await Restaurante.updateOne({"items.url":req.params.url},editar);
 
       messages.push({
-        message: "Item agregado correctamente!",
+        message: "Item modificado correctamente!",
         alertType: "success",
       });
       req.flash("messages", messages);
@@ -126,7 +132,9 @@ exports.EditarItems = async (req, res, next) => {
 
 // Crear un item
 exports.crearItem = async (req, res, next) => {
-    let restaurante = await Restaurante.findOne({_id:req.params.restaurante}).lean();
+    console.log("Crear item");
+    let restaurante = await Restaurante.findOne({url:req.params.id}).lean();
+    console.log(restaurante);
     // Verificar que no existen errores de validación
     const errores = validationResult(req);
     const messages = [];
@@ -149,17 +157,18 @@ exports.crearItem = async (req, res, next) => {
          imgurl = req.file.filename;
         }else{
           let item = await Restaurante.findOne();
-
         if(item.imgurl){
           imgurl = item.imgurl;
         }else{
           imgurl = "no-image-default.png";
         }
-      }
+        }
+
+        
         const agregar = {
           $push: {items:{nombre,descripcion,precio,restaurante_id,imgurl}}
         }
-        await Restaurante.updateOne({_id:req.params.restaurante},agregar);
+        await Restaurante.updateOne({url:req.params.id},agregar);
   
         messages.push({
           message: "Item agregado correctamente!",
