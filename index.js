@@ -91,7 +91,8 @@ app.use("/delivery",delliveryRoutes());
 const host = "0.0.0.0";
 const port = process.env.PORT;
 
-app.listen(port, host, () => {
-  console.log(`Servidor ejecutándose en el puerto ${port}`);
-});
+//app.listen(port, host, () => {
+  //console.log(`Servidor ejecutándose en el puerto ${port}`);
+//});
+app.listen(process.env.PORT);
 
