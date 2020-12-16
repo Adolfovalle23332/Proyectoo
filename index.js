@@ -16,7 +16,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const flash = require("connect-flash");
-const { host } = require("./config/mailtrap");
+//const { host } = require("./config/mailtrap");
 
 // Ruta de las variables de entorno
 require("dotenv").config({ path: ".env" });
