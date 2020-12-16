@@ -16,6 +16,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const flash = require("connect-flash");
+const { host } = require("./config/mailtrap");
 
 // Ruta de las variables de entorno
 require("dotenv").config({ path: ".env" });
@@ -86,4 +87,10 @@ app.use("/", router());
 app.use("/clientes", clienteRoutes());
 app.use("/restaurantes", restauranteRoutes());
 app.use("/delivery",delliveryRoutes());
-app.listen(process.env.PORT);
+const host="0.0.0.0";
+const port= process.env.PORT;
+app.listen(port,host,()=>{
+     console.log('servidor ejecutandose en el puerto ${port})'
+     );
+});
+
