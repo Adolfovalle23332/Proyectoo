@@ -29,7 +29,7 @@ app.engine("hbs", exphbs({ defaultLayout: "frontend", extname: ".hbs" }));
 app.set("view engine", "hbs");
 
 // Definir ruta para archivos estáticos.
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "/public")));
 
 var hbs = exphbs.create({});
 
@@ -86,4 +86,12 @@ app.use("/", router());
 app.use("/clientes", clienteRoutes());
 app.use("/restaurantes", restauranteRoutes());
 app.use("/delivery",delliveryRoutes());
-app.listen(process.env.PORT);
+
+// Permitir que Heroku nos asigne un puerto disponible
+const host = "0.0.0.0";
+const port = process.env.PORT;
+
+app.listen(port, host, () => {
+  console.log(`Servidor ejecutándose en el puerto ${port}`);
+});
+
